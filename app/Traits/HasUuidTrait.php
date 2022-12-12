@@ -2,56 +2,57 @@
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
 trait HasUuidTrait
 {
-    protected static function bootHasUuidTrait()
-    {
-        static::creating(function ($model) {
-
-            if (!$model->id) {
-                $model->id = (string)Uuid::uuid4();
-            }
-        });
-    }
-
-    public static function findByUuidOrFail($uuid)
-    {
-        return self::whereUuid($uuid)->firstOrFail();
-    }
+    protected $isLockedUuid = true;
 
     /**
-     * Eloquent scope to look for a given UUID
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param  String                                $uuid  The UUID to search for
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeWithUuid($query, $uuid)
-    {
-        return $query->where('id', $uuid);
-    }
-
-    /**
-     * Eloquent scope to look for multiple given UUIDs
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @param  Array                                 $uuids  The UUIDs to search for
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeWithUuids($query, Array $uuids): \Illuminate\Database\Eloquent\Builder
-    {
-        return $query->whereIn('id', $uuids);
-    }
-
-    /**
-     * Get the route key for the model.
-     *
+     * Used by Eloquent to get primary key type.
+     * UUID Identified as a string.
      * @return string
      */
-    public function getRouteKeyName(): string
+    public function getKeyType()
     {
-        return 'id';
+        return 'string';
+    }
+
+    /**
+     * Used by Eloquent to get if the primary key is auto increment value.
+     * UUID is not.
+     * @return bool
+     */
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    /**
+     * Add behavior to creating and saving Eloquent events.
+     * @return void
+     */
+    public static function bootHasUuid()
+    {
+        // Create a UUID to the model if it does not have one
+        static::creating(function (Model $model) {
+            $model->keyType = 'string';
+            $model->incrementing = false;
+
+            if (!$model->getKey()) {
+                $model->{$model->getKeyName()} = (string)Str::uuid();
+            }
+        });
+
+        // Set original if someone try to change UUID on update/save existing model
+        static::saving(function (Model $model) {
+            $original_id = $model->getOriginal('id');
+            if (!is_null($original_id) && $model->isLockedUuid) {
+                if ($original_id !== $model->id) {
+                    $model->id = $original_id;
+                }
+            }
+        });
     }
 }
