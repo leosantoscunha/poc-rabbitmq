@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace App\Handler;
 
+use App\Commands\CreateUserCommand;
 use App\Models\User;
 
 final class CreateUserCommandHandler

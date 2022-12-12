@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace App\Handler;
 
+use App\Commands\CreateProductCommand;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 

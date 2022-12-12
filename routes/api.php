@@ -20,3 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('product', 'App\Http\Controllers\ProductController');
 Route::post('user', 'App\Http\Controllers\CreateUserController');
+
+Route::get('users', function () {
+    return \App\Models\User::all();
+});
