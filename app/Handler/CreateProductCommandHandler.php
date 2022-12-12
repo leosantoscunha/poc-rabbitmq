@@ -6,7 +6,7 @@ use App\Commands\CreateProductCommand;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 
-class CreateProductCommandHandler
+final class CreateProductCommandHandler
 {
     public function __invoke(CreateProductCommand $command)
     {

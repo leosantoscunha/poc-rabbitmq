@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 trait HasUuidTrait
@@ -45,13 +46,11 @@ trait HasUuidTrait
             }
         });
 
-        // Set original if someone try to change UUID on update/save existing model
+        // Set original if someone tries to change UUID on update/save existing model
         static::saving(function (Model $model) {
-            $original_id = $model->getOriginal('id');
-            if (!is_null($original_id) && $model->isLockedUuid) {
-                if ($original_id !== $model->id) {
-                    $model->id = $original_id;
-                }
+            $originalId = $model->getOriginal('id');
+            if (!is_null($originalId) && $model->isLockedUuid && $originalId !== $model->id) {
+                $model->id = $originalId;
             }
         });
     }

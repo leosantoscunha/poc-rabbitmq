@@ -4,11 +4,9 @@ namespace App;
 
 use Illuminate\Bus\Dispatcher;
 
-class IlluminateCommandBus implements CommandBus
+final class IlluminateCommandBus implements CommandBus
 {
     private Dispatcher $bus;
-
-    protected $handlers = [];
 
     public function __construct(Dispatcher $bus) {
         $this->bus = $bus;

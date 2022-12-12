@@ -3,10 +3,6 @@
 namespace App\Providers;
 
 use App\CommandBus;
-use App\Commands\CreateProductCommand;
-use App\Commands\CreateUserCommand;
-use App\Handler\CreateProductCommandHandler;
-use App\Handler\CreateUserCommandHandler;
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;

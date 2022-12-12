@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\CommandBus;
 use App\Commands\CreateProductCommand;
 
-class ProductController extends Controller
+final class ProductController extends Controller
 {
     private CommandBus $commandBus;
 
